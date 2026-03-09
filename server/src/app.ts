@@ -7,6 +7,9 @@ const app = express();
 app.use(express.json());
 
 // Routes
+app.use('/healthcheck', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 app.use('/api/items', itemRoutes);
 
 // Global error handler (should be after routes)
