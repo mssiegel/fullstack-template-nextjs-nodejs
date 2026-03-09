@@ -9,20 +9,24 @@
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts",
     "lint": "eslint 'src/**/*.ts'",
-    "test": "test"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "author": "moshe siegel",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.3.5",
     "dotenv": "^17.3.1",
     "eslint": "^10.0.3",
     "express": "^5.2.1",
     "install": "^0.13.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.14",
     "npm": "^11.11.0",
     "prettier": "^3.8.1",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
