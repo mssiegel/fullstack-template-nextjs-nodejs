@@ -1,2 +1,1 @@
 # fullstack-template-nextjs-nodejs
-
