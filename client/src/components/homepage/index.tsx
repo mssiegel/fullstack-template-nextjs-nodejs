@@ -1,12 +1,35 @@
-import React from "react";
+"use client";
 
+import React, { useEffect, useState } from "react";
+
+import { getItems, type Item } from "@/api/items";
 import styles from "./index.module.css";
 
 export default function Homepage(): React.ReactElement {
+  const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchItems = async (): Promise<void> => {
+      try {
+        const data = await getItems();
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
+    void fetchItems();
+  }, []);
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Welcome to the Homepage</h1>
-      <p>This is the homepage component.</p>
+      <p>Your list of items:</p>
+      <ol>
+        {items.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ol>
     </div>
   );
 }
