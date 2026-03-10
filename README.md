@@ -29,7 +29,8 @@ npm install
 ### Environment configuration
 
 Example server env file: (`server/.env.example`):
-Example client env file: (`client/.env.local`):
+
+Example client env file: (`client/.env.example`):
 
 ## 2. Run
 
