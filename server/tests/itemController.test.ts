@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getItems } from '../src/controllers/itemController';
-import { items } from '../src/models/item';
+import { items } from '../src/models/itemModel';
 
 const defaultItems = [
   { id: 1, name: 'pizza' },
