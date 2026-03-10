@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import Homepage from "@components/homepage";
 
 describe("Homepage", () => {
@@ -30,6 +30,45 @@ describe("Homepage", () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith("http://localhost:8000/api/items");
+    globalThis.fetch = originalFetch;
+  });
+
+  it("submits a new item and renders it", async () => {
+    const originalFetch = globalThis.fetch;
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [],
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: 3, name: "New Item" }),
+      } as Response);
+    globalThis.fetch = fetchMock as typeof fetch;
+
+    const { getByRole, getByLabelText, getByText } = render(<Homepage />);
+
+    fireEvent.change(getByLabelText("Item name"), {
+      target: { value: "New Item" },
+    });
+    fireEvent.click(getByRole("button", { name: "Add item" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        2,
+        "http://localhost:8000/api/items",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: "New Item" }),
+        },
+      );
+      expect(getByText("New Item")).toBeInTheDocument();
+    });
+
     globalThis.fetch = originalFetch;
   });
 });
