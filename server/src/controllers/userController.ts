@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import { User, users } from '../models/userModel';
 import { generateJWT } from '../utils/jwtUtils';
+import logger from '../config/logger';
 
 const registerUser = async (
   req: Request,
@@ -33,6 +34,7 @@ const registerUser = async (
     };
     users.push(newUser);
     generateJWT(res, newUser.id);
+    logger.info(`User registered: ${email}`);
     res.status(201).json({ message: 'User created successfully!' });
   } catch (error) {
     next(error);

@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import pinoHttp from 'pino-http';
 
 import { corsOptions } from './middlewares/corsOptions';
 import { errorHandler } from './utils/errorHandler';
+import logger from './config/logger';
 import authRoutes from './routes/authRoutes';
 import itemRoutes from './routes/itemRoutes';
 import userRoutes from './routes/userRoutes';
@@ -14,6 +16,9 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Logs every http request
+app.use(pinoHttp({ logger }));
 
 // Routes
 app.use('/healthcheck', (req, res) => {
