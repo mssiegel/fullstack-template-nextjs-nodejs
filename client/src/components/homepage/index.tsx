@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { getItems, type Item } from "@/api/items";
 import AddItemForm from "./AddItemForm";
+import RegisterNewUserForm from "./RegisterNewUserForm";
 import styles from "./index.module.css";
 
 export default function Homepage(): React.ReactElement {
@@ -27,6 +28,7 @@ export default function Homepage(): React.ReactElement {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Welcome to the Homepage</h1>
+      <RegisterNewUserForm />
       <p>Your list of items:</p>
       <ol>
         {items.map((item) => (
