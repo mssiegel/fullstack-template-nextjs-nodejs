@@ -28,36 +28,8 @@ npm install
 
 ### Environment configuration
 
-The server reads environment variables from `.env` (via `dotenv`).
-
-Supported server variables:
-
-- `PORT` (default: `8000`)
-- `NODE_ENV` (default: `development`)
-
-Example (`server/.env`):
-
-```env
-PORT=8000
-NODE_ENV=development
-```
-
-The client supports a public API base URL variable:
-
-- `NEXT_PUBLIC_API_BASE_URL` (default fallback: `http://localhost:8000`)
-
-Example (`client/.env.local`):
-
-```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
-```
-
-You can start from the provided example file:
-
-```bash
-cd client
-cp .env.local.example .env.local
-```
+Example server env file: (`server/.env.example`):
+Example client env file: (`client/.env.local`):
 
 ## 2. Run
 
@@ -185,38 +157,4 @@ cd client
 npm install
 npm run build
 npm start
-```
-
-Run the client and server behind a reverse proxy (for example, Nginx) in production.
-
-### Production note about API URL
-
-Set `NEXT_PUBLIC_API_BASE_URL` to your deployed API host in production, for example:
-
-```env
-NEXT_PUBLIC_API_BASE_URL=https://api.example.com
-```
-
-## Useful Commands
-
-Client:
-
-```bash
-cd client
-npm run dev
-npm run build
-npm start
-npm run lint
-npm test
-```
-
-Server:
-
-```bash
-cd server
-npm run dev
-npm run build
-npm start
-npm run lint
-npm test
 ```
