@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
 
-import { users } from '../models/userModel';
+import { prisma } from '../lib/prisma';
 
 declare global {
   namespace Express {
@@ -39,7 +39,9 @@ const authenticateUser = async (
     throw createError(500, 'Server error during authentication');
   }
 
-  const user = users.find((u) => u.id === decoded.userId);
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.userId },
+  });
 
   if (!user) throw createError(401, 'Not authorized, user not found');
 
