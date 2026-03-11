@@ -18,7 +18,7 @@ describe("Homepage", () => {
     const originalFetch = globalThis.fetch;
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
-      json: async () => mockedItems,
+      json: async () => ({ success: true, data: { items: mockedItems } }),
     } as Response);
     globalThis.fetch = fetchMock as typeof fetch;
 
@@ -39,11 +39,11 @@ describe("Homepage", () => {
       .fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => [],
+        json: async () => ({ success: true, data: { items: [] } }),
       } as Response)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ id: 3, name: "New Item" }),
+        json: async () => ({ success: true, data: { item: { id: 3, name: "New Item" } } }),
       } as Response);
     globalThis.fetch = fetchMock as typeof fetch;
 
@@ -60,6 +60,7 @@ describe("Homepage", () => {
         "http://localhost:8000/api/items",
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
