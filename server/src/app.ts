@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import pinoHttp from 'pino-http';
 
-import { corsOptions } from './middlewares/corsOptions';
+import { corsOptions } from './config/corsOptions';
 import { errorHandler } from './utils/errorHandler';
 import logger from './config/logger';
 import authRoutes from './routes/authRoutes';
