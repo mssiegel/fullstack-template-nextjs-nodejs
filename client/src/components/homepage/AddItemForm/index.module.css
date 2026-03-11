@@ -18,3 +18,8 @@
   cursor: pointer;
   padding: 8px 12px;
 }
+
+.status {
+  margin: 8px 0 0;
+  color: #a61b1b;
+}

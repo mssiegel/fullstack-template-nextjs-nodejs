@@ -17,23 +17,17 @@ const authenticateUser = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
+  const token = req.cookies.jwt;
+
+  if (!token) throw createError(401, 'Not authorized, no token');
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) throw createError(500, 'JWT secret is not defined');
+
+  let decoded: { userId: number };
+
   try {
-    const token = req.cookies.jwt;
-
-    if (!token) throw createError(401, 'Not authorized, no token');
-
-    const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) throw createError(500, 'JWT secret is not defined');
-
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-
-    const user = users.find((u) => u.id === decoded.userId);
-
-    if (!user) throw createError(401, 'Not authorized, user not found');
-
-    req.user = user;
-
-    next();
+    decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError)
       throw createError(401, 'Token expired');
@@ -42,9 +36,16 @@ const authenticateUser = async (
       throw createError(401, 'Invalid token');
 
     console.error('Authentication error:', error);
-    res.status(500).json({ message: 'Server error during authentication' });
-    return;
+    throw createError(500, 'Server error during authentication');
   }
+
+  const user = users.find((u) => u.id === decoded.userId);
+
+  if (!user) throw createError(401, 'Not authorized, user not found');
+
+  req.user = user;
+
+  next();
 };
 
 export default authenticateUser;

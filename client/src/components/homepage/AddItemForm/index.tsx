@@ -13,6 +13,7 @@ export default function AddItemForm({
   onItemCreated,
 }: AddItemFormProps): React.ReactElement {
   const [name, setName] = useState<string>("");
+  const [statusMessage, setStatusMessage] = useState<string>("");
 
   const handleSubmit = async (
     event: React.SubmitEvent<HTMLFormElement>,
@@ -23,11 +24,15 @@ export default function AddItemForm({
     if (!trimmedName) return;
 
     try {
+      setStatusMessage("");
       const createdItem = await addItem(trimmedName);
       onItemCreated(createdItem);
       setName("");
     } catch (error) {
       console.error("Error adding item:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setStatusMessage(`${errorMessage}. Please try again.`);
     }
   };
 
@@ -44,6 +49,11 @@ export default function AddItemForm({
       <button className={styles.button} type="submit">
         Add item
       </button>
+      {statusMessage && (
+        <p className={styles.status} role="alert">
+          {statusMessage}
+        </p>
+      )}
     </form>
   );
 }

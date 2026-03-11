@@ -31,9 +31,7 @@ export default function RegisterNewUserForm(): React.ReactElement {
       console.error("Error registering user:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
-      setStatusMessage(
-        `Unable to register user. ${errorMessage}. Please try again.`,
-      );
+      setStatusMessage(`${errorMessage}. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
