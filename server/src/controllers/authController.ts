@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import createError from 'http-errors';
 
-import { User, users } from '../models/userModel';
+import { prisma } from '../lib/prisma';
 import { clearJWT, generateJWT } from '../utils/jwtUtils';
 
 const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -10,7 +10,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
 
   if (!email || !password) throw createError(400, 'Missing credentials');
 
-  const user: User | null = users.find((u) => u.email === email) || null;
+  const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) throw createError(400, 'User not found');
 

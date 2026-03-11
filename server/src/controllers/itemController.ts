@@ -1,48 +1,57 @@
 import { Request, Response } from 'express';
 import createError from 'http-errors';
 
-import { items, Item } from '../models/itemModel';
+import { prisma } from '../lib/prisma';
 
 // Create an item
-export const createItem = (req: Request, res: Response) => {
+export const createItem = async (req: Request, res: Response) => {
   const { name } = req.body;
   if (!name) throw createError(400, 'Name is required');
 
-  const newItem: Item = { id: Date.now(), name };
-  items.push(newItem);
+  const newItem = await prisma.item.create({
+    data: { name },
+  });
   res.status(201).json({ success: true, data: { item: newItem } });
 };
 
 // Read all items
-export const getItems = (req: Request, res: Response) => {
+export const getItems = async (req: Request, res: Response) => {
+  const items = await prisma.item.findMany();
   res.json({ success: true, data: { items } });
 };
 
 // Read single item
-export const getItemById = (req: Request, res: Response) => {
+export const getItemById = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string);
-  const item = items.find((i) => i.id === id);
+  const item = await prisma.item.findUnique({
+    where: { id },
+  });
   if (!item) throw createError(404, 'Item not found');
   res.json({ success: true, data: { item } });
 };
 
 // Update an item
-export const updateItem = (req: Request, res: Response) => {
+export const updateItem = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string);
   const { name } = req.body;
-  const itemIndex = items.findIndex((i) => i.id === id);
-  if (itemIndex === -1) throw createError(404, 'Item not found');
 
-  items[itemIndex].name = name;
-  res.json({ success: true, data: { item: items[itemIndex] } });
+  const item = await prisma.item.update({
+    where: { id },
+    data: { name },
+  });
+
+  // TODO: if not found: throw createError(404, 'Item not found');
+  res.json({ success: true, data: { item } });
 };
 
 // Delete an item
-export const deleteItem = (req: Request, res: Response) => {
+export const deleteItem = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string);
-  const itemIndex = items.findIndex((i) => i.id === id);
-  if (itemIndex === -1) throw createError(404, 'Item not found');
 
-  const deletedItem = items.splice(itemIndex, 1)[0];
+  const deletedItem = await prisma.item.delete({
+    where: { id },
+  });
+
+  // TODO: if not found: throw createError(404, 'Item not found');
   res.json({ success: true, data: { item: deletedItem } });
 };
