@@ -5,6 +5,20 @@ export type Item = {
   name: string;
 };
 
+type GetItemsResponse = {
+  success: boolean;
+  data: {
+    items: Item[];
+  };
+};
+
+type AddItemResponse = {
+  success: boolean;
+  data: {
+    item: Item;
+  };
+};
+
 export async function getItems(): Promise<Item[]> {
   const response = await fetch(`${getApiBaseUrl()}/api/items`);
 
@@ -12,7 +26,8 @@ export async function getItems(): Promise<Item[]> {
     throw new Error(`Failed to fetch items: ${response.status}`);
   }
 
-  return response.json() as Promise<Item[]>;
+  const payload = (await response.json()) as GetItemsResponse;
+  return payload.data.items;
 }
 
 export async function addItem(name: string): Promise<Item> {
@@ -32,5 +47,6 @@ export async function addItem(name: string): Promise<Item> {
     );
   }
 
-  return response.json() as Promise<Item>;
+  const payload = (await response.json()) as AddItemResponse;
+  return payload.data.item;
 }

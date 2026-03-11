@@ -23,8 +23,8 @@ export default function RegisterNewUserForm(): React.ReactElement {
       setIsSubmitting(true);
       setStatusMessage("");
 
-      const response = await registerUser(trimmedEmail, password);
-      setStatusMessage(response.message || "User registered successfully.");
+      await registerUser(trimmedEmail, password);
+      setStatusMessage("User registered successfully.");
       setEmail("");
       setPassword("");
     } catch (error) {

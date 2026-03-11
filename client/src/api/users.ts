@@ -1,7 +1,8 @@
 import { getApiBaseUrl } from "../utils";
 
 export type RegisterUserResponse = {
-  message: string;
+  success: boolean;
+  data: Record<string, never>;
 };
 
 export async function registerUser(
@@ -21,5 +22,5 @@ export async function registerUser(
     throw new Error(`Failed to register user: ${response.status}`);
   }
 
-  return response.json() as Promise<RegisterUserResponse>;
+  return (await response.json()) as RegisterUserResponse;
 }
