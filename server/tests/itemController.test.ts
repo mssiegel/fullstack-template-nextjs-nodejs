@@ -14,7 +14,7 @@ describe('Item Controller', () => {
   });
 
   it('should return an empty array when no items exist', () => {
-    // Create mock objects for Request, Response, and NextFunction
+    // Create mock objects for Request and Response
     const req = {} as Request;
     const res = {
       json: jest.fn(),
@@ -24,10 +24,12 @@ describe('Item Controller', () => {
     items.length = 0;
 
     // Execute our controller function
-    getItems(req, res, jest.fn());
+    getItems(req, res);
 
-    // Expect that res.json was called with an empty array
-    expect(res.json).toHaveBeenCalledWith([]);
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      data: [],
+    });
   });
 
   it('should return default items when initialized', () => {
@@ -36,8 +38,11 @@ describe('Item Controller', () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    getItems(req, res, jest.fn());
+    getItems(req, res);
 
-    expect(res.json).toHaveBeenCalledWith(defaultItems);
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      data: defaultItems,
+    });
   });
 });
