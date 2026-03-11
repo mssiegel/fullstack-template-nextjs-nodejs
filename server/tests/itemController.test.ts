@@ -8,22 +8,20 @@ const defaultItems = [
 ];
 
 describe('Item Controller', () => {
+  const req = {} as Request;
+  const res = {
+    json: jest.fn(),
+  } as unknown as Response;
+
   beforeEach(() => {
+    jest.clearAllMocks();
     items.length = 0;
     items.push(...defaultItems);
   });
 
   it('should return an empty array when no items exist', () => {
-    // Create mock objects for Request and Response
-    const req = {} as Request;
-    const res = {
-      json: jest.fn(),
-    } as unknown as Response;
-
-    // Ensure that our in-memory store is empty
     items.length = 0;
 
-    // Execute our controller function
     getItems(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
@@ -33,11 +31,6 @@ describe('Item Controller', () => {
   });
 
   it('should return default items when initialized', () => {
-    const req = {} as Request;
-    const res = {
-      json: jest.fn(),
-    } as unknown as Response;
-
     getItems(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
