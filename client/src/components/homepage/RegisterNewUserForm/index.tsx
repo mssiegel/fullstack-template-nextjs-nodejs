@@ -29,7 +29,11 @@ export default function RegisterNewUserForm(): React.ReactElement {
       setPassword("");
     } catch (error) {
       console.error("Error registering user:", error);
-      setStatusMessage("Unable to register user. Please try again.");
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setStatusMessage(
+        `Unable to register user. ${errorMessage}. Please try again.`,
+      );
     } finally {
       setIsSubmitting(false);
     }
