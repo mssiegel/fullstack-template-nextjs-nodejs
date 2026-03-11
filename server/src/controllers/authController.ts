@@ -9,31 +9,27 @@ const loginUser = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-      res.status(400).json({ message: 'Missing credentials' });
-      return;
-    }
-
-    const user: User | null = users.find((u) => u.email === email) || null;
-
-    if (!user) {
-      res.status(400).json({ message: 'User not found!' });
-      return;
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      res.status(400).json({ message: 'Invalid password!' });
-      return;
-    }
-    generateJWT(res, user.id);
-    res.status(200).json({ message: 'Login successful!' });
-  } catch (error) {
-    next(error);
+  if (!email || !password) {
+    res.status(400).json({ message: 'Missing credentials' });
+    return;
   }
+
+  const user: User | null = users.find((u) => u.email === email) || null;
+
+  if (!user) {
+    res.status(400).json({ message: 'User not found!' });
+    return;
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    res.status(400).json({ message: 'Invalid password!' });
+    return;
+  }
+  generateJWT(res, user.id);
+  res.status(200).json({ message: 'Login successful!' });
 };
 
 const logoutUser = async (
@@ -41,12 +37,8 @@ const logoutUser = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  try {
-    clearJWT(res);
-    res.status(200).json({ message: 'Logout successful!' });
-  } catch (error) {
-    next(error);
-  }
+  clearJWT(res);
+  res.status(200).json({ message: 'Logout successful!' });
 };
 
 export { loginUser, logoutUser };
