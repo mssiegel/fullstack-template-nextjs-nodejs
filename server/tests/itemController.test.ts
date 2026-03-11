@@ -26,7 +26,7 @@ describe('Item Controller', () => {
 
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      data: [],
+      data: { items: [] },
     });
   });
 
@@ -35,7 +35,7 @@ describe('Item Controller', () => {
 
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      data: defaultItems,
+      data: { items: defaultItems },
     });
   });
 });

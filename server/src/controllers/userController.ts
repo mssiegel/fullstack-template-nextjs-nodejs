@@ -33,9 +33,11 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   const user = users.find((u) => u.id === userId);
   if (!user) throw createError(404, 'User not found');
 
-  res
-    .status(200)
-    .json({ success: true, data: { id: user.id, email: user.email } });
+  const userDataWithoutPassword = { id: user.id, email: user.email };
+  res.status(200).json({
+    success: true,
+    data: { user: userDataWithoutPassword },
+  });
 };
 
 export { registerUser, getUser };

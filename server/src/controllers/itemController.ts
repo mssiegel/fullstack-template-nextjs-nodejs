@@ -15,7 +15,7 @@ export const createItem = (req: Request, res: Response) => {
 
 // Read all items
 export const getItems = (req: Request, res: Response) => {
-  res.json({ success: true, data: items });
+  res.json({ success: true, data: { items } });
 };
 
 // Read single item
@@ -23,7 +23,7 @@ export const getItemById = (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string);
   const item = items.find((i) => i.id === id);
   if (!item) throw createError(404, 'Item not found');
-  res.json({ success: true, data: item });
+  res.json({ success: true, data: { item } });
 };
 
 // Update an item
