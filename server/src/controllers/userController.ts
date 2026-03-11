@@ -1,27 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import createError from 'http-errors';
 
 import { User, users } from '../models/userModel';
 import { generateJWT } from '../utils/jwtUtils';
 import logger from '../config/logger';
 
-const registerUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
+const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    res.status(400).json({ message: 'Missing credentials!' });
-    return;
-  }
+  if (!email || !password) throw createError(400, 'Missing credentials!');
 
   const existingEmail = users.find((user) => user.email === email);
-  if (existingEmail) {
-    res.status(400).json({ message: 'Email already exists!' });
-    return;
-  }
+  if (existingEmail) throw createError(400, 'Email already exists!');
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -37,17 +28,11 @@ const registerUser = async (
   res.status(201).json({ message: 'User created successfully!' });
 };
 
-const getUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
+const getUser = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user?.id;
   const user = users.find((u) => u.id === userId);
-  if (!user) {
-    res.status(404).json({ message: 'User not found' });
-    return;
-  }
+  if (!user) throw createError(404, 'User not found');
+
   res.status(200).json({ id: user.id, email: user.email });
 };
 

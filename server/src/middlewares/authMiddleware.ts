@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import createError from 'http-errors';
 
 import { users } from '../models/userModel';
 
@@ -19,37 +20,26 @@ const authenticateUser = async (
   try {
     const token = req.cookies.jwt;
 
-    if (!token) {
-      res.status(401).json({ message: 'Not authorized, no token' });
-      return;
-    }
+    if (!token) throw createError(401, 'Not authorized, no token');
 
     const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) {
-      res.status(500).json({ message: 'JWT secret is not defined' });
-      return;
-    }
+    if (!JWT_SECRET) throw createError(500, 'JWT secret is not defined');
+
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
 
     const user = users.find((u) => u.id === decoded.userId);
 
-    if (!user) {
-      res.status(401).json({ message: 'Not authorized, user not found' });
-      return;
-    }
+    if (!user) throw createError(401, 'Not authorized, user not found');
 
     req.user = user;
 
     next();
   } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      res.status(401).json({ message: 'Token expired' });
-      return;
-    }
-    if (error instanceof jwt.JsonWebTokenError) {
-      res.status(401).json({ message: 'Invalid token' });
-      return;
-    }
+    if (error instanceof jwt.TokenExpiredError)
+      throw createError(401, 'Token expired');
+
+    if (error instanceof jwt.JsonWebTokenError)
+      throw createError(401, 'Invalid token');
 
     console.error('Authentication error:', error);
     res.status(500).json({ message: 'Server error during authentication' });
