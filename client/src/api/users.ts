@@ -1,5 +1,4 @@
 import { getApiBaseUrl } from "../utils";
-import { BackendErrorResponse } from "../types";
 
 export type RegisterUserResponse = {
   success: boolean;
@@ -20,10 +19,10 @@ export async function registerUser(
   });
 
   if (!response.ok) {
-    const errorResponse = (await response.json()) as BackendErrorResponse;
+    const errorData = await response.json();
 
     throw new Error(
-      `Failed to register user: ${response.status}. Explanation: ${errorResponse.message}.`,
+      `Failed to register user: ${response.status}, ${errorData?.message}`,
     );
   }
 
