@@ -25,7 +25,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
   users.push(newUser);
   generateJWT(res, newUser.id);
   logger.info(`User registered: ${email}`);
-  res.status(201).json({ message: 'User created successfully!' });
+  res.status(201).json({ success: true, data: {} });
 };
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -33,7 +33,9 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   const user = users.find((u) => u.id === userId);
   if (!user) throw createError(404, 'User not found');
 
-  res.status(200).json({ id: user.id, email: user.email });
+  res
+    .status(200)
+    .json({ success: true, data: { id: user.id, email: user.email } });
 };
 
 export { registerUser, getUser };

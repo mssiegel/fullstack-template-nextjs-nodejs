@@ -18,12 +18,12 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
   if (!isMatch) throw createError(400, 'Invalid password');
 
   generateJWT(res, user.id);
-  res.status(200).json({ message: 'Login successful!' });
+  res.status(200).json({ success: true, data: {} });
 };
 
 const logoutUser = async (req: Request, res: Response): Promise<void> => {
   clearJWT(res);
-  res.status(200).json({ message: 'Logout successful!' });
+  res.status(200).json({ success: true, data: {} });
 };
 
 export { loginUser, logoutUser };
