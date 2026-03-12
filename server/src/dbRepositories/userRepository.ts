@@ -1,17 +1,19 @@
 import { prisma } from '../lib/prisma';
 
-async function findByEmail(email: string) {
+// GET
+async function getByEmail(email: string) {
   return prisma.user.findUnique({
     where: { email },
   });
 }
 
-async function findById(id: number) {
+async function getById(id: number) {
   return prisma.user.findUnique({
     where: { id },
   });
 }
 
+// POST
 async function createUser(email: string, password: string) {
   return prisma.user.create({
     data: {
@@ -22,7 +24,7 @@ async function createUser(email: string, password: string) {
 }
 
 export const userRepository = {
-  findByEmail,
-  findById,
+  getByEmail,
+  getById,
   createUser,
 };

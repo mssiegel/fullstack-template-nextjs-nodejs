@@ -10,7 +10,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
 
   if (!email || !password) throw createError(400, 'Missing credentials');
 
-  const user = await userRepository.findByEmail(email);
+  const user = await userRepository.getByEmail(email);
 
   if (!user) throw createError(400, 'User not found');
 

@@ -11,7 +11,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
 
   if (!email || !password) throw createError(400, 'Missing credentials!');
 
-  const existingEmail = await userRepository.findByEmail(email);
+  const existingEmail = await userRepository.getByEmail(email);
   if (existingEmail) throw createError(400, 'Email already exists!');
 
   const salt = await bcrypt.genSalt(10);
@@ -25,7 +25,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user?.id;
-  const user = await userRepository.findById(userId);
+  const user = await userRepository.getById(userId);
   if (!user) throw createError(404, 'User not found');
 
   const userDataWithoutPassword = { id: user.id, email: user.email };
