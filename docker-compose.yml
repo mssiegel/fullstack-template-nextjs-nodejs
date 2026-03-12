@@ -14,6 +14,7 @@ services:
         condition: service_healthy
     restart: on-failure:3
     command: sh -c "npm install && npm run dev"
+
   server:
     build:
       context: ./server
@@ -37,3 +38,17 @@ services:
       start_period: 10s
     restart: on-failure:3
     command: sh -c "npm install && npm run dev:docker"
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: on-failure:3
+
+volumes:
+  pgdata:

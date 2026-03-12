@@ -2,29 +2,12 @@
 
 Starter fullstack template with:
 
-- `client/`: Next.js frontend (port `3000`)
+- `client/`: Next.js + TypeScript frontend (port `3000`)
 - `server/`: Express + TypeScript backend (port `8000`)
+- The server uses a Postgres (SQL) database
 - Docker support for local containerized development
 
 ## 1. Setup
-
-### Prerequisites
-
-- Node.js `18+` (Node `20` recommended)
-- npm `9+`
-- Docker Desktop (optional, for Docker-based run/deploy)
-
-### Install dependencies
-
-From the repository root:
-
-```bash
-cd client
-npm install
-
-cd ../server
-npm install
-```
 
 ### Environment configuration
 
@@ -36,12 +19,13 @@ Example client env file: (`client/.env.example`):
 
 ### Option A: Run locally with npm
 
-Use two terminals.
+Set up your own Postgres database and update the relevant database `.env` variable.
 
 Terminal 1 (server):
 
 ```bash
 cd server
+npm install
 npm run dev
 ```
 
@@ -49,6 +33,7 @@ Terminal 2 (client):
 
 ```bash
 cd client
+npm install
 npm run dev
 ```
 
@@ -95,67 +80,7 @@ cd client
 npm test
 ```
 
-### Watch mode
-
-Server:
-
-```bash
-cd server
-npm run test:watch
-```
-
-Client:
-
-```bash
-cd client
-npm run test:watch
-```
-
 ## 4. Deployment
 
-You can deploy either with Docker or by building and running each app directly.
-
-### A. Docker deployment (recommended)
-
-1. Build images:
-
-```bash
-docker compose build
-```
-
-2. Run in detached mode:
-
-```bash
-docker compose up -d
-```
-
-3. Verify:
-
-- `http://<your-host>:3000` (client)
-- `http://<your-host>:8000/healthcheck` (server)
-
-4. View logs:
-
-```bash
-docker compose logs -f
-```
-
-### B. Non-Docker deployment
-
-#### Server (Express)
-
-```bash
-cd server
-npm install
-npm run build
-npm start
-```
-
-#### Client (Next.js)
-
-```bash
-cd client
-npm install
-npm run build
-npm start
-```
+1. You can deploy with Docker.
+2. You can set up your own Postgres database and build and run the client and server.
