@@ -1,13 +1,20 @@
 import { Request, Response } from 'express';
 import { getItems } from '../src/controllers/itemController';
-import { items } from '../src/models/itemModel';
+import { itemRepository } from '../src/dbRepositories/itemRepository';
 
-const defaultItems = [
+jest.mock('../src/dbRepositories/itemRepository', () => ({
+  itemRepository: {
+    getAllItems: jest.fn(),
+  },
+}));
+
+const sampleItems = [
   { id: 1, name: 'pizza' },
   { id: 2, name: 'bagels' },
 ];
 
 describe('Item Controller', () => {
+  const mockGetAllItems = itemRepository.getAllItems as jest.Mock;
   const req = {} as Request;
   const res = {
     json: jest.fn(),
@@ -15,14 +22,12 @@ describe('Item Controller', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    items.length = 0;
-    items.push(...defaultItems);
   });
 
-  it('should return an empty array when no items exist', () => {
-    items.length = 0;
+  it('should return an empty array when no items exist', async () => {
+    mockGetAllItems.mockResolvedValue([]);
 
-    getItems(req, res);
+    await getItems(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
       success: true,
@@ -30,12 +35,14 @@ describe('Item Controller', () => {
     });
   });
 
-  it('should return default items when initialized', () => {
-    getItems(req, res);
+  it('should return all items when items exist', async () => {
+    mockGetAllItems.mockResolvedValue(sampleItems);
+
+    await getItems(req, res);
 
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      data: { items: defaultItems },
+      data: { items: sampleItems },
     });
   });
 });
