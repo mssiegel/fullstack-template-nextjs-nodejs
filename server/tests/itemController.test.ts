@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
-import { getItems } from '../src/controllers/itemController';
+import { getItemById, getItems } from '../src/controllers/itemController';
 import { itemRepository } from '../src/dbRepositories/itemRepository';
 
 jest.mock('../src/dbRepositories/itemRepository', () => ({
   itemRepository: {
     getAllItems: jest.fn(),
+    getById: jest.fn(),
   },
 }));
 
@@ -13,8 +14,11 @@ const sampleItems = [
   { id: 2, name: 'bagels' },
 ];
 
+const sampleItem = sampleItems[0];
+
 describe('Item Controller', () => {
   const mockGetAllItems = itemRepository.getAllItems as jest.Mock;
+  const mockGetById = itemRepository.getById as jest.Mock;
   const req = {} as Request;
   const res = {
     json: jest.fn(),
@@ -43,6 +47,18 @@ describe('Item Controller', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       data: { items: sampleItems },
+    });
+  });
+
+  it('should return a single item when the item exists', async () => {
+    mockGetById.mockResolvedValue(sampleItem);
+
+    await getItemById({ params: { id: '1' } } as unknown as Request, res);
+
+    expect(mockGetById).toHaveBeenCalledWith(1);
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      data: { item: sampleItem },
     });
   });
 });
