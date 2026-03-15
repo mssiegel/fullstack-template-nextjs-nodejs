@@ -61,4 +61,17 @@ describe('Item Controller', () => {
       data: { item: sampleItem },
     });
   });
+
+  it("should throw 404 when trying to get a single item that doesn't exist", async () => {
+    mockGetById.mockResolvedValue(null);
+
+    await expect(
+      getItemById({ params: { id: '999' } } as unknown as Request, res),
+    ).rejects.toMatchObject({
+      status: 404,
+      message: 'Item not found',
+    });
+
+    expect(mockGetById).toHaveBeenCalledWith(999);
+  });
 });
